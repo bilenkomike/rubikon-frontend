@@ -6,7 +6,7 @@ import UsersSideBar from "./components/sidebars/UsersSidebar";
 import OrdersSidebar from "./components/sidebars/OrdersSidebar";
 import { Navigate, Route, Routes } from "react-router-dom";
 import ContactPage from "./pages/ContactPage";
-import AuthModal from "./components/modals/authModal";
+import AuthModal from "./components/modals/AuthModal";
 import CategoriesPage from "./pages/CategoriesPage";
 import ProductsPage from "./pages/ProductsPage";
 import ProductPage from "./pages/ProductPage";
