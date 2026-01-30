@@ -6,24 +6,211 @@ import {
   ListItemText,
   Typography,
   Grid,
+  Button,
+  Divider,
+  IconButton,
+  useMediaQuery,
+  CircularProgress,
 } from "@mui/material";
-import { useState, useEffect } from "react";
-import { catalog } from "../../data/catalog.mock";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useTheme } from "@mui/material/styles";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useUI } from "../../stores/ui.store";
+import { useI18n } from "../../translations/i18nProvider";
+import api from "../../api/axios";
 
 const CatalogSidebar = () => {
   const { catalogOpen, setCatalogOpen } = useUI();
+  const { lang } = useI18n();
+  const navigate = useNavigate();
 
-  // default active category
-  const [activeCategory, setActiveCategory] = useState("");
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const [categories, setCategories] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [subcategories, setSubcategories] = useState([]);
+  const [loadingSubs, setLoadingSubs] = useState(false);
+  const [mobileStep, setMobileStep] = useState("categories");
+
+  /* ---------------- FETCH CATEGORIES ---------------- */
 
   useEffect(() => {
-    if (!activeCategory && catalog.length > 0) {
-      setActiveCategory(catalog[0]);
-    }
+    if (!catalogOpen) return;
+
+    api
+      .get("products/categories/")
+      .then((res) => {
+        setCategories(res.data);
+        setActiveCategory(res.data[0] || null);
+      })
+      .catch(console.error);
+  }, [catalogOpen]);
+
+  /* ---------------- FETCH SUBCATEGORIES ---------------- */
+
+  useEffect(() => {
+    if (!activeCategory) return;
+
+    setLoadingSubs(true);
+    setSubcategories([]);
+
+    api
+      .get(`products/categories/${activeCategory.slug}/subcategories/`)
+      .then((res) => {
+        setSubcategories(res.data || []);
+      })
+      .catch(console.error)
+      .finally(() => setLoadingSubs(false));
   }, [activeCategory]);
 
-  if (!activeCategory) return null;
+  /* ---------------- HELPERS ---------------- */
+
+  const tName = (obj) => (lang === "ru" ? obj.name_ru : obj.name);
+
+  const goToCategory = (slug) => {
+    setCatalogOpen(false);
+    navigate(`/${lang}/categories/${slug}`);
+  };
+
+  /* ---------------- MOBILE ---------------- */
+
+  const MobileView = () => (
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      {mobileStep === "subcategories" && (
+        <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
+          <IconButton onClick={() => setMobileStep("categories")}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography fontWeight={600}>{tName(activeCategory)}</Typography>
+        </Box>
+      )}
+
+      <Divider />
+
+      <Box sx={{ flex: 1, overflowY: "auto" }}>
+        {mobileStep === "categories" ? (
+          <List>
+            {categories.map((cat) => (
+              <ListItemButton
+                key={cat.id}
+                onClick={() => {
+                  setActiveCategory(cat);
+                  setMobileStep("subcategories");
+                }}
+              >
+                <ListItemText primary={tName(cat)} />
+              </ListItemButton>
+            ))}
+          </List>
+        ) : (
+          <Box sx={{ p: 2 }}>
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{ mb: 2 }}
+              onClick={() => goToCategory(activeCategory.slug)}
+            >
+              {lang === "ru" ? "Перейти в категорию" : "View category"}
+            </Button>
+
+            {loadingSubs && <CircularProgress size={20} />}
+
+            {!loadingSubs && subcategories.length === 0 && null}
+
+            {!loadingSubs &&
+              subcategories.map((sub) => (
+                <Typography
+                  key={sub.id}
+                  sx={{
+                    py: 1,
+                    cursor: "pointer",
+                    "&:hover": { color: "primary.main" },
+                  }}
+                  onClick={() =>
+                    navigate(
+                      `/${lang}/categories/${activeCategory.slug}/${sub.slug}`,
+                    )
+                  }
+                >
+                  {tName(sub)}
+                </Typography>
+              ))}
+          </Box>
+        )}
+      </Box>
+    </Box>
+  );
+
+  /* ---------------- DESKTOP ---------------- */
+
+  const DesktopView = () => (
+    <Box sx={{ display: "flex", height: "100%" }}>
+      {/* LEFT */}
+      <Box
+        sx={{
+          width: 280,
+          borderRight: "1px solid #e0e0e0",
+          overflowY: "auto",
+        }}
+      >
+        <List disablePadding>
+          {categories.map((cat) => (
+            <ListItemButton
+              key={cat.id}
+              selected={activeCategory?.id === cat.id}
+              onMouseEnter={() => setActiveCategory(cat)}
+              onClick={() => goToCategory(cat.slug)}
+            >
+              <ListItemText primary={tName(cat)} />
+            </ListItemButton>
+          ))}
+        </List>
+      </Box>
+
+      {/* RIGHT */}
+      <Box sx={{ flex: 1, p: 3 }}>
+        {loadingSubs && <CircularProgress />}
+
+        {!loadingSubs && subcategories.length === 0 && null}
+
+        {!loadingSubs && subcategories.length > 0 && (
+          <Box
+            sx={{
+              columnCount: 4, // number of columns
+              columnGap: 4,
+            }}
+          >
+            {subcategories.map((item) => (
+              <Typography
+                key={item.id}
+                sx={{
+                  breakInside: "avoid",
+                  fontSize: 14,
+                  mb: 1,
+                  cursor: "pointer",
+                  "&:hover": {
+                    color: "primary.main",
+                    textDecoration: "underline",
+                  },
+                }}
+                onClick={() =>
+                  navigate(
+                    `/${lang}/categories/${activeCategory.slug}/${item.slug}`,
+                  )
+                }
+              >
+                {lang === "ru" ? item.name_ru : item.name}
+              </Typography>
+            ))}
+          </Box>
+        )}
+      </Box>
+    </Box>
+  );
+
+  /* ---------------- RENDER ---------------- */
 
   return (
     <Drawer
@@ -32,102 +219,18 @@ const CatalogSidebar = () => {
       onClose={() => setCatalogOpen(false)}
       PaperProps={{
         sx: {
-          width: "100%",
-          maxWidth: 1200,
+          width: {
+            xs: "90vw", // mobile
+            md: "100%", // desktop
+          },
+          maxWidth: {
+            xs: "90vw",
+            md: 1200,
+          },
         },
       }}
     >
-      <Box sx={{ display: "flex", height: "100vh" }}>
-        {/* LEFT COLUMN — MAIN CATEGORIES */}
-        <Box
-          sx={{
-            width: 280,
-            borderRight: "1px solid #e0e0e0",
-            overflowY: "auto",
-          }}
-        >
-          <List disablePadding>
-            {catalog.map((cat) => {
-              const isActive = activeCategory.id === cat.id;
-
-              return (
-                <ListItemButton
-                  key={cat.id}
-                  selected={isActive}
-                  onMouseEnter={() => setActiveCategory(cat)}
-                  sx={{
-                    py: 1.25,
-                    px: 2,
-                    "&.Mui-selected": {
-                      backgroundColor: "#f5f5f5",
-                      fontWeight: 600,
-                    },
-                  }}
-                >
-                  <ListItemText
-                    primary={cat.title}
-                    sx={{
-                      fontSize: 14,
-                    }}
-                  />
-                </ListItemButton>
-              );
-            })}
-          </List>
-        </Box>
-
-        {/* RIGHT PANEL — SUBCATEGORIES */}
-        <Box
-          sx={{
-            flex: 1,
-            p: 3,
-            overflowY: "auto",
-          }}
-        >
-          <Grid container spacing={4}>
-            {activeCategory.sections.map((section) => (
-              <Grid item xs={12} sm={6} md={4} key={section.title}>
-                {/* Section title */}
-                <Typography
-                  sx={{
-                    fontWeight: 600,
-                    mb: 1,
-                    color: "primary.main",
-                  }}
-                >
-                  {section.title}
-                </Typography>
-
-                {/* Section items */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 0.75,
-                  }}
-                >
-                  {section.items.map((item) => (
-                    <Typography
-                      key={item}
-                      sx={{
-                        fontSize: 14,
-                        cursor: "pointer",
-                        color: "text.primary",
-                        "&:hover": {
-                          color: "primary.main",
-                          textDecoration: "underline",
-                        },
-                      }}
-                    >
-                      {item}
-                    </Typography>
-                  ))}
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </Box>
+      {isMobile ? <MobileView /> : <DesktopView />}
     </Drawer>
   );
 };

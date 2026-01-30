@@ -95,7 +95,7 @@ const ProductCard = ({ product }) => {
                     color: "text.secondary",
                   }}
                 >
-                  ₴{product.oldPrice}
+                  ₽{product.oldPrice}
                 </Typography>
               )}
 
@@ -107,7 +107,7 @@ const ProductCard = ({ product }) => {
                   lineHeight: 1,
                 }}
               >
-                ₴{product.price}
+                ₽{product.price}
               </Typography>
             </Box>
 

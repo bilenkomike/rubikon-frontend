@@ -13,7 +13,7 @@ export const UIProvider = ({ children }) => {
   const [catalogOpen, setCatalogOpen] = useState(false);
   const [ordersOpen, setOrdersOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [authOpen, setAuthOpen] = useState(true);
+  const [authOpen, setAuthOpen] = useState(false);
 
   const value = {
     // catalog

@@ -13,7 +13,7 @@ import ProductPage from "./pages/ProductPage";
 
 function App() {
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "#f5f5f5" }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "#f5f5f5", marginBottom: "64px" }}>
       <Header />
       <Routes>
         {/* redirect root */}

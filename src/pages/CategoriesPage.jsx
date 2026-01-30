@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Container,
   Typography,
@@ -8,80 +7,54 @@ import {
   Stack,
   Breadcrumbs,
   Link,
+  CircularProgress,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useI18n } from "../translations/i18nProvider";
+import { useEffect, useState } from "react";
 import PromoSlider from "../components/Home/PromoSlider";
+import api from "../api/axios";
 
 const CategoriesPage = () => {
-  const { category } = useParams();
-  console.log(category);
+  const { category: slug } = useParams();
   const navigate = useNavigate();
-  const { lang } = useI18n();
+  const { lang, t } = useI18n();
 
-  const categoryTitle = "Товари для геймерів";
+  const [trending, setTrending] = useState([]);
+  const [category, setCategory] = useState(null);
+  const [subcategories, setSubcategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const popularCategories = [
-    {
-      title: "Ігрові приставки PlayStation",
-      image: "https://via.placeholder.com/48",
-    },
-    {
-      title: "Ігрові ноутбуки ASUS",
-      image: "https://via.placeholder.com/48",
-    },
-    {
-      title: "Ігрові монітори Samsung",
-      image: "https://via.placeholder.com/48",
-    },
-    {
-      title: "Ігрові навушники HyperX",
-      image: "https://via.placeholder.com/48",
-    },
-  ];
+  useEffect(() => {
+    if (!slug) return;
 
-  const subcategories = [
-    {
-      slug: "games",
-      title: "Ігри",
-      image: "https://via.placeholder.com/300x200",
-    },
-    {
-      slug: "peripherals",
-      title: "Ігрова периферія",
-      image: "https://via.placeholder.com/300x200",
-    },
-    {
-      slug: "monitors",
-      title: "Ігрові монітори",
-      image: "https://via.placeholder.com/300x200",
-    },
-    {
-      slug: "chairs",
-      title: "Крісла для геймерів",
-      image: "https://via.placeholder.com/300x200",
-    },
-    {
-      slug: "vr",
-      title: "Окуляри і шоломи VR",
-      image: "https://via.placeholder.com/300x200",
-    },
-    {
-      slug: "merch",
-      title: "Атрибутика і сувеніри",
-      image: "https://via.placeholder.com/300x200",
-    },
-    {
-      slug: "routers",
-      title: "Ігрові маршрутизатори",
-      image: "https://via.placeholder.com/300x200",
-    },
-    {
-      slug: "tables",
-      title: "Геймерські столи",
-      image: "https://via.placeholder.com/300x200",
-    },
-  ];
+    setLoading(true);
+
+    Promise.all([
+      api.get("products/categories/?home=true"),
+      api.get(`products/categories/${slug}/`),
+      api.get(`products/categories/${slug}/subcategories/`),
+    ])
+      .then(([trendingRes, categoryRes, subRes]) => {
+        setTrending(trendingRes.data.slice(0, 4));
+        setCategory(categoryRes.data);
+        setSubcategories(subRes.data);
+      })
+      .catch((err) => {
+        console.error("Category load error:", err);
+      })
+      .finally(() => setLoading(false));
+  }, [slug]);
+
+  const categoryTitle = lang === "ru" ? category?.name_ru : category?.name;
+
+  if (loading || !category) {
+    return (
+      <Box sx={{ py: 6, display: "flex", justifyContent: "center" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth={false} sx={{ maxWidth: "1600px", mt: 3, mb: 6 }}>
@@ -93,7 +66,7 @@ const CategoriesPage = () => {
           onClick={() => navigate(`/${lang}`)}
           sx={{ cursor: "pointer" }}
         >
-          Головна
+          {t.categories.home}
         </Link>
         <Typography color="text.primary">{categoryTitle}</Typography>
       </Breadcrumbs>
@@ -103,87 +76,93 @@ const CategoriesPage = () => {
         {categoryTitle}
       </Typography>
 
-      {/* PROMO + POPULAR */}
-      <Box sx={{ mb: 4, display: "flex", alignItems: "flex-start", gap: 8 }}>
-        {/* PROMO BANNER */}
+      {/* PROMO + TRENDING */}
+      <Box sx={{ mb: 4, display: "flex", gap: 8 }}>
+        {/* PROMO */}
         <Box sx={{ maxWidth: "60vw", width: "100%" }}>
           <PromoSlider />
         </Box>
 
-        {/* POPULAR CATEGORIES */}
-        <Box>
+        {/* TRENDING CATEGORIES */}
+        <Box sx={{ minWidth: 280 }}>
           <Typography fontWeight={700} sx={{ mb: 2 }}>
-            Популярні категорії
+            {t.categories.trending}
           </Typography>
 
           <Stack spacing={2}>
-            {popularCategories.map((item) => (
-              <Stack
-                key={item.title}
-                direction="row"
-                spacing={2}
-                alignItems="center"
+            {trending.map((item) => {
+              const title = lang === "ru" ? item.name_ru : item.name;
+
+              return (
+                <Stack
+                  key={item.id}
+                  direction="row"
+                  spacing={2}
+                  alignItems="center"
+                  onClick={() => navigate(`/${lang}/categories/${item.slug}`)}
+                  sx={{
+                    cursor: "pointer",
+                    "&:hover": {
+                      color: "primary.main",
+                    },
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={item.image}
+                    sx={{ width: 40, height: 40, objectFit: "contain" }}
+                  />
+                  <Typography>{title}</Typography>
+                </Stack>
+              );
+            })}
+          </Stack>
+        </Box>
+      </Box>
+
+      {/* SUBCATEGORIES */}
+      <Typography fontWeight={700} fontSize={24} sx={{ mb: 2 }}>
+        {t.categories.all}
+      </Typography>
+
+      <Grid container spacing={3}>
+        {subcategories.map((sub) => {
+          const title = lang === "ru" ? sub.name_ru : sub.name;
+
+          return (
+            <Grid item xs={6} sm={4} md={3} key={sub.id}>
+              <Paper
+                onClick={() =>
+                  navigate(`/${lang}/category/${category}/${sub.slug}`)
+                }
                 sx={{
+                  p: 2,
                   cursor: "pointer",
+                  height: "100%",
+                  textAlign: "center",
                   "&:hover": {
-                    color: "primary.main",
+                    boxShadow: 3,
                   },
                 }}
               >
                 <Box
                   component="img"
-                  src={item.image}
-                  sx={{ width: 40, height: 40 }}
+                  src={sub.image}
+                  sx={{
+                    width: "100%",
+                    height: 140,
+                    objectFit: "contain",
+                    mb: 1,
+                  }}
                 />
-                <Typography>{item.title}</Typography>
-              </Stack>
-            ))}
-          </Stack>
-        </Box>
-      </Box>
 
-      {/* SUBCATEGORIES GRID */}
-      <Typography fontWeight={700} fontSize={24} sx={{ mb: 2 }}>
-        Категорії
-      </Typography>
-      <Grid
-        container
-        spacing={3}
-        sx={{ gridTemplateColumns: "1fr 1fr 1fr 1fr" }}
-      >
-        {subcategories.map((sub) => (
-          <Grid item xs={4} sm={4} md={3} key={sub.slug} size={2}>
-            <Paper
-              onClick={() =>
-                navigate(`/${lang}/category/${category}/${sub.slug}`)
-              }
-              sx={{
-                p: 2,
-                cursor: "pointer",
-                height: "100%",
-                textAlign: "center",
-                "&:hover": {
-                  boxShadow: 3,
-                },
-              }}
-            >
-              <Box
-                component="img"
-                src={sub.image}
-                sx={{
-                  width: "100%",
-                  height: 140,
-                  objectFit: "contain",
-                  mb: 1,
-                }}
-              />
-
-              <Typography color="primary.main" fontWeight={500}>
-                {sub.title}
-              </Typography>
-            </Paper>
-          </Grid>
-        ))}
+                <Typography color="primary.main" fontWeight={500}>
+                  {title}
+                </Typography>
+              </Paper>
+            </Grid>
+          );
+        })}
       </Grid>
     </Container>
   );

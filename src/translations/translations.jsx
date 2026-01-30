@@ -1,5 +1,11 @@
 export const translations = {
   en: {
+    categories: {
+      categories: "Categories",
+      trending: "Trending categories",
+      all: "Sub Categories",
+      home: "Home",
+    },
     contact: {
       title: "Contact us",
       description: "Fill in the form or contact us via Telegram",
@@ -29,6 +35,12 @@ export const translations = {
   },
 
   ru: {
+    categories: {
+      categories: "Категории",
+      trending: "Популярные категории",
+      all: "Под Категории",
+      home: "Главная",
+    },
     auth: {
       title: "Вход",
       email: "Email",
