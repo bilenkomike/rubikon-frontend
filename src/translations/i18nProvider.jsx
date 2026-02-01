@@ -5,7 +5,7 @@ import { translations } from "./translations";
 const I18nContext = createContext(null);
 
 const SUPPORTED_LANGS = ["en", "ru"];
-const DEFAULT_LANG = "en";
+const DEFAULT_LANG = "ru";
 
 export const I18nProvider = ({ children }) => {
   const location = useLocation();

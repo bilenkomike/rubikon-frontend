@@ -9,12 +9,12 @@ import "swiper/css/pagination";
 const promos = [
   {
     id: 1,
-    image: "https://picsum.photos/1200/320?1",
+    image: "/banner_1.jpg",
     title: "Winter Sale",
   },
   {
     id: 2,
-    image: "https://picsum.photos/1200/320?2",
+    image: "banner_2.jpg",
     title: "Up to -55%",
   },
   {
@@ -45,7 +45,8 @@ const PromoSlider = () => {
               sx={{
                 height: 280,
                 backgroundImage: `url(${promo.image})`,
-                backgroundSize: "cover",
+                backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
               }}
             />

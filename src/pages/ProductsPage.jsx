@@ -85,11 +85,11 @@ const ProductsPage = () => {
         <Grid>
           <Grid item xs={12} md={9}>
             <Grid container spacing={2}>
-              {products.map((product) => (
+              {/* {products.map((product) => (
                 <Grid item xs={6} sm={4} md={3} key={product.id}>
                   <ProductCard product={product} />
                 </Grid>
-              ))}
+              ))} */}
             </Grid>
           </Grid>
         </Grid>

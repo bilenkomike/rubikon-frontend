@@ -1,5 +1,9 @@
 export const translations = {
   en: {
+    home: {
+      best_offers: "Best offers for you",
+    },
+
     categories: {
       categories: "Categories",
       trending: "Trending categories",
@@ -8,33 +12,86 @@ export const translations = {
     },
     contact: {
       title: "Contact us",
-      description: "Fill in the form or contact us via Telegram",
+      description: "Leave a message and we will get back to you",
       name: "Your name",
       email: "Email",
       message: "Message",
       send: "Send message",
-      telegram: "Contact via Telegram",
+      success: "Message sent successfully",
+      error: "Failed to send message. Try again later.",
+      orTelegram: "Or contact us via Telegram",
+      telegram: "Telegram",
+      companyDetails: "Company details",
+    },
+    cart: {
+      title: "Cart",
+      empty: "Your cart is empty",
+      emptyHint: "Add products to continue shopping",
+      goToCatalog: "Go to catalog",
+      total: "Total",
+      checkout: "Checkout",
     },
     userMenu: {
       title: "Account",
       login: "Sign in or register",
       orders: "My orders",
       wishlist: "Wishlist",
+      profile: "Go to profile",
     },
     common: {
       language: "Language",
       contacts: "Contacts",
       about: "About company",
+      catalog: "Catalog",
+      cart: "Cart",
+      open_menu: "Open menu",
+      go_home: "Go to home",
     },
     auth: {
-      title: "Sign in",
+      loginTitle: "Login",
+      registerTitle: "Create account",
+
+      first_name: "Name",
+      last_name: "Surname",
       email: "Email",
       password: "Password",
-      login: "Sign in",
+
+      login: "Login",
+      register: "Register",
+
+      switchToRegister: "Create an account",
+      switchToLogin: "Already have an account?",
+
+      error: "Authentication failed. Please try again.",
+    },
+    profile: {
+      title: "My profile",
+      first_name: "Name",
+      last_name: "Surname",
+      email: "Email",
+      phone_number: "Phone number",
+      save: "Save changes",
+      profile: "Profile",
+      orders: "My orders",
+      wishlist: "Wishlist",
+      change_password: "Change password",
+      logout: "Logout",
+      wishlist_empty: "Your wishlist is empty",
+      current_password: "Current password",
+      new_password: "New password",
+      confirm_password: "Confirm new password",
+
+      passwords_not_match: "Passwords do not match",
+      change_password_success: "Password changed successfully. ",
+      change_password_error: "Failed to change password",
     },
   },
 
   ru: {
+    home: {
+      best_offers: "Лучшие предложения для вас",
+    },
+
     categories: {
       categories: "Категории",
       trending: "Популярные категории",
@@ -42,31 +99,81 @@ export const translations = {
       home: "Главная",
     },
     auth: {
-      title: "Вход",
+      loginTitle: "Вход",
+      registerTitle: "Регистрация",
+
+      first_name: "Имя",
+      last_name: "Фамилия",
       email: "Email",
       password: "Пароль",
+
       login: "Войти",
+      register: "Зарегистрироваться",
+
+      switchToRegister: "Создать аккаунт",
+      switchToLogin: "Уже есть аккаунт?",
+
+      error: "Ошибка авторизации. Попробуйте ещё раз.",
     },
     userMenu: {
       title: "Личный кабинет",
       login: "Войти или зарегистрироваться",
       orders: "Мои заказы",
       wishlist: "Список желаний",
+      profile: "Перейти в профиль",
+    },
+    cart: {
+      title: "Корзина",
+      empty: "Корзина пуста",
+      emptyHint: "Добавьте товары, чтобы продолжить покупки",
+      goToCatalog: "Перейти в каталог",
+      total: "Итого",
+      checkout: "Оформить заказ",
     },
     common: {
       language: "Язык",
       contacts: "Контакты",
       about: "О компании",
+      catalog: "Каталог",
+      cart: "Корзина",
+      open_menu: "Открыть меню",
+      go_home: "На главную",
     },
 
     contact: {
       title: "Связаться с нами",
-      description: "Заполните форму или напишите нам в Telegram",
+      description: "Оставьте сообщение, и мы свяжемся с вами",
       name: "Ваше имя",
       email: "Email",
       message: "Сообщение",
       send: "Отправить сообщение",
-      telegram: "Написать в Telegram",
+      success: "Сообщение успешно отправлено",
+      error: "Не удалось отправить сообщение",
+      orTelegram: "Или напишите нам в Telegram",
+      telegram: "Telegram",
+      companyDetails: "Реквизиты компании",
+    },
+
+    profile: {
+      title: "Мой профиль",
+      first_name: "Имя",
+      last_name: "Фамилия",
+      email: "Email",
+      phone_number: "Номер телефона",
+      save: "Сохранить изменения",
+      profile: "Профиль",
+      orders: "Мои заказы",
+      wishlist: "Избранное",
+      change_password: "Сменить пароль",
+      logout: "Выйти",
+      wishlist_empty: "Список желаний пуст",
+      current_password: "Текущий пароль",
+      new_password: "Новый пароль",
+      confirm_password: "Подтвердите новый пароль",
+
+      passwords_not_match: "Пароли не совпадают",
+      change_password_success: "Пароль успешно изменён.",
+      change_password_error: "Не удалось изменить пароль",
     },
   },
 };

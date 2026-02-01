@@ -4,7 +4,7 @@ import { translations } from "./translations";
 export const useLang = () => {
   const { lang } = useParams();
 
-  const currentLang = translations[lang] ? lang : "en";
+  const currentLang = translations[lang] ? lang : "ru";
 
   const t = translations[currentLang];
 

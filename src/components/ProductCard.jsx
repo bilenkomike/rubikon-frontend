@@ -8,10 +8,41 @@ import {
   IconButton,
 } from "@mui/material";
 import FavoriteBorderOutlined from "@mui/icons-material/FavoriteBorderOutlined";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+
 import ShoppingCartOutlined from "@mui/icons-material/ShoppingCartOutlined";
 import StarIcon from "@mui/icons-material/Star";
+import { useAuth } from "../stores/auth.store";
+import { useUI } from "../stores/ui.store";
+import { useParams } from "react-router-dom";
+import { useWishlist } from "../stores/wishlist.store";
+
+const renderStars = (rating) => {
+  const fullStars = Math.floor(rating);
+  const emptyStars = 5 - fullStars;
+
+  return (
+    <>
+      {[...Array(fullStars)].map((_, i) => (
+        <StarIcon key={`full-${i}`} sx={{ fontSize: 16, color: "#FFA900" }} />
+      ))}
+
+      {[...Array(emptyStars)].map((_, i) => (
+        <StarIcon key={`empty-${i}`} sx={{ fontSize: 16, color: "#E0E0E0" }} />
+      ))}
+    </>
+  );
+};
 
 const ProductCard = ({ product }) => {
+  const { isAuthenticated } = useAuth();
+  const { setAuthOpen } = useUI();
+  const { lang } = useParams();
+  const { wishlistIds, toggleWishlist } = useWishlist();
+
+  const inWishlist = wishlistIds.has(product.id);
+
   return (
     <Card
       sx={{
@@ -31,14 +62,21 @@ const ProductCard = ({ product }) => {
           zIndex: 2,
           color: "#FFA900",
         }}
+        onClick={() => {
+          if (!isAuthenticated) {
+            setAuthOpen(true);
+            return;
+          }
+          toggleWishlist(product.id);
+        }}
       >
-        <FavoriteBorderOutlined />
+        {inWishlist ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
       </IconButton>
 
       {/* Image */}
       <CardMedia
         component="img"
-        image={product.image}
+        image={`${import.meta.env.VITE_MEDIA_BASE_URL}/${product.image}`}
         alt={product.title}
         sx={{
           height: 180,
@@ -63,18 +101,15 @@ const ProductCard = ({ product }) => {
               },
             }}
           >
-            {product.title}
+            {lang === "en" ? product.name : product.name_ru}
           </Typography>
 
           {/* Rating */}
           <Stack direction="row" spacing={0.5} alignItems="center">
-            {[...Array(4)].map((_, i) => (
-              <StarIcon key={i} sx={{ fontSize: 16, color: "#FFA900" }} />
-            ))}
-            <StarIcon sx={{ fontSize: 16, color: "#E0E0E0" }} />
-
+            {/* also finish here the logic behind the render of the stars use product.statistics.rating */}
+            {renderStars(product.statistics.rating)}
             <Typography variant="caption" color="text.secondary">
-              {product.reviews}
+              {product.statistics.rating}
             </Typography>
           </Stack>
 
@@ -87,7 +122,7 @@ const ProductCard = ({ product }) => {
             }}
           >
             <Box>
-              {product.oldPrice && (
+              {product.sale && (
                 <Typography
                   variant="caption"
                   sx={{
@@ -95,7 +130,7 @@ const ProductCard = ({ product }) => {
                     color: "text.secondary",
                   }}
                 >
-                  ₽{product.oldPrice}
+                  ₽{product.price}
                 </Typography>
               )}
 
@@ -107,13 +142,22 @@ const ProductCard = ({ product }) => {
                   lineHeight: 1,
                 }}
               >
-                ₽{product.price}
+                ₽
+                {product.sale
+                  ? product.price - (product.price * product.sale) / 100
+                  : product.price}
               </Typography>
             </Box>
 
             <IconButton
               sx={{
                 color: "primary.main",
+              }}
+              onClick={() => {
+                if (!isAuthenticated) {
+                  setAuthOpen(true);
+                  return;
+                }
               }}
             >
               <ShoppingCartOutlined />
