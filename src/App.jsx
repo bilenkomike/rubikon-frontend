@@ -15,6 +15,9 @@ import { useAuth } from "./stores/auth.store";
 import ProfileLayout from "./components/layouts/ProfileLayout/ProfileLayout";
 import WishlistPage from "./pages/WishlistPage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import MyOrdersPage from "./pages/MyOrdersPage";
+import OrderDetailPage from "./pages/OrderDetailPage";
 
 const RequireAuth = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -51,6 +54,14 @@ function App() {
               <Route path="product/:product/" element={<ProductPage />} />
               <Route path="contact" element={<ContactPage />} />
               <Route
+                path="/checkout"
+                element={
+                  <RequireAuth>
+                    <CheckoutPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
                 path="/profile"
                 element={
                   <RequireAuth>
@@ -61,9 +72,11 @@ function App() {
                 <Route index element={<ProfilePage />} />
                 <Route path="wishlist" element={<WishlistPage />} />
                 <Route path="password" element={<ChangePasswordPage />} />
-                {/* <Route path="orders" element={<MyOrdersPage />} />
-                
-                 */}
+                <Route path="my-orders" element={<MyOrdersPage />} />
+                <Route
+                  path="my-orders/:orderId"
+                  element={<OrderDetailPage />}
+                />
               </Route>
             </Routes>
           }

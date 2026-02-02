@@ -112,7 +112,7 @@ const UsersSidebar = () => {
           <List>
             <ListItemButton
               onClick={() =>
-                requireAuth(() => navigateWithLang("/profile/orders"))
+                requireAuth(() => navigateWithLang("/profile/my-orders"))
               }
             >
               <ListItemText primary={t.userMenu.orders} />

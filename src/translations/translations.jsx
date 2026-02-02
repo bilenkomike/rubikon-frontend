@@ -3,6 +3,18 @@ export const translations = {
     home: {
       best_offers: "Best offers for you",
     },
+    checkout: {
+      title: "Confirm order",
+      empty: "Cart is empty",
+      note: "Order note (optional)",
+      confirm: "Confirm order",
+      total: "Total",
+      successTitle: "Order placed successfully",
+      successText: "Your order #{id} has been created.",
+      redirect:
+        "You will be redirected to your order page in {seconds} seconds.",
+      goNow: "Go to order now",
+    },
     product: {
       reviews: "reviews",
       add_to_cart: "Add to cart",
@@ -52,6 +64,7 @@ export const translations = {
       cart: "Cart",
       open_menu: "Open menu",
       go_home: "Go to home",
+      cancel: "Cancel",
     },
     auth: {
       loginTitle: "Login",
@@ -91,11 +104,71 @@ export const translations = {
       change_password_success: "Password changed successfully. ",
       change_password_error: "Failed to change password",
     },
+    reviews: {
+      title: "Reviews",
+      leave: "Leave a review",
+      empty: "No reviews yet",
+      count: "reviews",
+      submit: "Submit review",
+      errors: {
+        name: "Please enter your name",
+        text: "Review must be at least 10 characters",
+      },
+      form: {
+        name: "Your name",
+        rating: "Rating",
+        text: "Review",
+      },
+    },
+
+    orders: {
+      title: "My orders",
+      empty: "You have no orders yet",
+      order: "Order",
+      status: "Status",
+      total: "Total",
+      items: "items",
+      open: "Open order",
+      created: "Created",
+      statuses: {
+        draft: "Draft",
+        placed: "Placed",
+        confirmed: "Confirmed",
+        completed: "Completed",
+        cancelled: "Cancelled",
+      },
+    },
+
+    orderDetail: {
+      title: "Order details",
+      order: "Order",
+      status: "Status",
+      created: "Created",
+      note: "Order note",
+      items: "Items",
+      quantity: "Qty",
+      price: "Price",
+      total: "Total",
+      back: "Back to orders",
+      confirmTelegram: "Confirm via Telegram",
+    },
   },
 
   ru: {
     home: {
       best_offers: "Лучшие предложения для вас",
+    },
+    checkout: {
+      title: "Подтверждение заказа",
+      empty: "Корзина пуста",
+      note: "Комментарий к заказу (необязательно)",
+      confirm: "Подтвердить заказ",
+      total: "Итого",
+      successTitle: "Заказ успешно оформлен",
+      successText: "Ваш заказ №{id} был создан.",
+      redirect:
+        "Вы будете перенаправлены на страницу заказа через {seconds} секунд.",
+      goNow: "Перейти к заказу",
     },
     product: {
       reviews: "отзывов",
@@ -151,6 +224,7 @@ export const translations = {
       cart: "Корзина",
       open_menu: "Открыть меню",
       go_home: "На главную",
+      cancel: "Отмена",
     },
 
     contact: {
@@ -187,6 +261,53 @@ export const translations = {
       passwords_not_match: "Пароли не совпадают",
       change_password_success: "Пароль успешно изменён.",
       change_password_error: "Не удалось изменить пароль",
+    },
+    reviews: {
+      title: "Отзывы",
+      leave: "Оставить отзыв",
+      empty: "Пока нет отзывов",
+      count: "отзывов",
+      submit: "Отправить отзыв",
+      errors: {
+        name: "Введите ваше имя",
+        text: "Отзыв должен быть не короче 10 символов",
+      },
+      form: {
+        name: "Ваше имя",
+        rating: "Оценка",
+        text: "Отзыв",
+      },
+    },
+
+    orders: {
+      title: "Мои заказы",
+      empty: "У вас пока нет заказов",
+      order: "Заказ",
+      status: "Статус",
+      total: "Итого",
+      items: "товаров",
+      open: "Открыть заказ",
+      created: "Создан",
+      statuses: {
+        draft: "Черновик",
+        placed: "Оформлен",
+        confirmed: "Подтверждён",
+        completed: "Завершён",
+        cancelled: "Отменён",
+      },
+    },
+    orderDetail: {
+      title: "Детали заказа",
+      order: "Заказ",
+      status: "Статус",
+      created: "Создан",
+      note: "Комментарий к заказу",
+      items: "Товары",
+      quantity: "Кол-во",
+      price: "Цена",
+      total: "Итого",
+      back: "Назад к заказам",
+      confirmTelegram: "Подтвердить в Telegram",
     },
   },
 };

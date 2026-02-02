@@ -613,7 +613,11 @@ const ProductPage = () => {
       )}
 
       {/* REVIEWS */}
-      <ReviewsSection reviews={product.reviews} averageRating={rating} />
+      <ReviewsSection
+        product={product.slug}
+        statisctics={product.statistics}
+        averageRating={rating}
+      />
     </Container>
   );
 };

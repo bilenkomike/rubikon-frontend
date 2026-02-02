@@ -31,7 +31,7 @@ const ProfileSidebar = () => {
     {
       key: "orders",
       label: t.profile.orders,
-      path: "orders",
+      path: "my-orders",
       icon: <ReceiptLongOutlinedIcon />,
     },
     {

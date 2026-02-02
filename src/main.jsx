@@ -9,21 +9,24 @@ import { BrowserRouter } from "react-router-dom";
 import { I18nProvider } from "./translations/i18nProvider";
 import { AuthProvider } from "./stores/auth.store.jsx";
 import { WishlistProvider } from "./stores/wishlist.store.jsx";
+import { CartProvider } from "./stores/cart.store.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <WishlistProvider>
-          <UIProvider>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <I18nProvider>
-                <App />
-              </I18nProvider>
-            </ThemeProvider>
-          </UIProvider>
-        </WishlistProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <UIProvider>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <I18nProvider>
+                  <App />
+                </I18nProvider>
+              </ThemeProvider>
+            </UIProvider>
+          </WishlistProvider>
+        </CartProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
