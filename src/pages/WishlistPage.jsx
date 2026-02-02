@@ -1,19 +1,9 @@
-import {
-  Box,
-  Typography,
-  Grid,
-  Card,
-  CardMedia,
-  CardContent,
-  IconButton,
-  Button,
-  CircularProgress,
-} from "@mui/material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Box, Typography, Grid, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useI18n } from "../translations/i18nProvider";
 import { useNavigate, useParams } from "react-router-dom";
+import ProductCard from "../components/ProductCard";
 
 const WishlistPage = () => {
   const { t } = useI18n();
@@ -66,57 +56,7 @@ const WishlistPage = () => {
         {items.map((item) => {
           const product = item.product;
 
-          return (
-            <Grid item xs={12} sm={6} md={4} key={item.id}>
-              <Card sx={{ height: "100%", position: "relative" }}>
-                <IconButton
-                  onClick={() => removeItem(product.id)}
-                  sx={{
-                    position: "absolute",
-                    top: 8,
-                    right: 8,
-                    zIndex: 2,
-                  }}
-                >
-                  <DeleteOutlineIcon />
-                </IconButton>
-
-                <CardMedia
-                  component="img"
-                  height="160"
-                  image={product.image}
-                  sx={{ cursor: "pointer" }}
-                  onClick={() => navigate(`/${lang}/product/${product.slug}`)}
-                />
-
-                <CardContent>
-                  <Typography
-                    fontSize={14}
-                    sx={{
-                      cursor: "pointer",
-                      "&:hover": { color: "primary.main" },
-                    }}
-                    onClick={() => navigate(`/${lang}/product/${product.slug}`)}
-                  >
-                    {product.title}
-                  </Typography>
-
-                  <Typography fontWeight={700} sx={{ mt: 1 }}>
-                    ₴{product.price}
-                  </Typography>
-
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    sx={{ mt: 1 }}
-                  >
-                    {t.common.add_to_cart}
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          );
+          return <ProductCard product={product} />;
         })}
       </Grid>
     </Box>
