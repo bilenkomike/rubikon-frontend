@@ -93,7 +93,7 @@ const CategoriesPage = () => {
         {/* PROMO */}
         <Box
           sx={{
-            maxWidth: "60vw",
+            maxWidth: "70vw",
             width: "100%",
             xs: { width: "100%", maxWidth: "unset" },
           }}
