@@ -529,6 +529,9 @@ const ProductPage = () => {
         <Grid item xs={12} md={4}>
           <Box sx={{ position: "sticky", top: 96 }}>
             <Paper sx={{ p: 3 }}>
+              <Stack direction="row" spacing={2} alignItems="center">
+                # {product.vendor_code_public}
+              </Stack>
               <Stack spacing={2}>
                 {/* RATING */}
                 <Stack direction="row" spacing={1} alignItems="center">
