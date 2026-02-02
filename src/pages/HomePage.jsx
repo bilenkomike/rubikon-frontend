@@ -85,10 +85,11 @@ const HomePage = () => {
                 alignItems: "center", // 👈 center on mobile
               }
             : {
-                display: "grid",
+                display: "flex",
+                flexDirection: "row",
                 alignItems: "flex-start",
-                gap: 2,
-                gridTemplateColumns: "280px 1fr",
+                gap: "16px",
+                // gridTemplateColumns: "280px 1fr",
               }
         }
       >
@@ -98,7 +99,7 @@ const HomePage = () => {
         </Box>
 
         {/* PRODUCTS */}
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "cal(100% - 400px)" }}>
           <ProductGrid />
         </Box>
       </Box>

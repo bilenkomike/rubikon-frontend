@@ -15,7 +15,7 @@ import ShoppingCartOutlined from "@mui/icons-material/ShoppingCartOutlined";
 import StarIcon from "@mui/icons-material/Star";
 import { useAuth } from "../stores/auth.store";
 import { useUI } from "../stores/ui.store";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useWishlist } from "../stores/wishlist.store";
 
 const renderStars = (rating) => {
@@ -42,6 +42,7 @@ const ProductCard = ({ product }) => {
   const { wishlistIds, toggleWishlist } = useWishlist();
 
   const inWishlist = wishlistIds.has(product.id);
+  const navigate = useNavigate();
 
   return (
     <Card
@@ -50,6 +51,9 @@ const ProductCard = ({ product }) => {
         height: "100%",
         position: "relative",
         borderRadius: 2,
+      }}
+      onClick={() => {
+        navigate(`/${lang}/product/${product.slug}/`);
       }}
     >
       {/* Wishlist */}

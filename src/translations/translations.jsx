@@ -3,7 +3,13 @@ export const translations = {
     home: {
       best_offers: "Best offers for you",
     },
-
+    product: {
+      reviews: "reviews",
+      add_to_cart: "Add to cart",
+      buy_one_click: "Buy in 1 click",
+      description: "Description",
+      characteristics: "Characteristics",
+    },
     categories: {
       categories: "Categories",
       trending: "Trending categories",
@@ -90,6 +96,13 @@ export const translations = {
   ru: {
     home: {
       best_offers: "Лучшие предложения для вас",
+    },
+    product: {
+      reviews: "отзывов",
+      add_to_cart: "Добавить в корзину",
+      buy_one_click: "Купить в 1 клик",
+      description: "Описание",
+      characteristics: "Характеристики",
     },
 
     categories: {
