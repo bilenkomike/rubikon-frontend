@@ -66,6 +66,20 @@ const OrderDetailPage = () => {
     return total;
   };
 
+  const calculateTotal = (items) => {
+    let total = 0;
+    items.map((item) => {
+      let _price = parseFloat(item.price);
+      if (item.sale) {
+        let _sale = (parseFloat(item.price) * parseFloat(item.sale)) / 100;
+        _price = parseFloat(item.price) - _sale;
+      }
+
+      total += _price * item.quantity;
+    });
+    return total;
+  };
+
   if (!order) return null;
 
   /* ---------- render ---------- */
@@ -132,7 +146,9 @@ const OrderDetailPage = () => {
                   </Typography>
                 </Box>
 
-                <Typography fontWeight={600}>₽{getTotal(item)}</Typography>
+                <Typography fontWeight={600}>
+                  ₽{getTotal(item).toFixed(2)}
+                </Typography>
               </Stack>
             ))}
           </Stack>
@@ -153,7 +169,9 @@ const OrderDetailPage = () => {
           {/* TOTAL */}
           <Stack direction="row" justifyContent="space-between">
             <Typography fontWeight={700}>{t.orderDetail.total}</Typography>
-            <Typography fontWeight={700}>₽{order.total}</Typography>
+            <Typography fontWeight={700}>
+              ₽{calculateTotal(order.items).toFixed(2)}
+            </Typography>
           </Stack>
 
           {/* TELEGRAM CTA (future-proof) */}

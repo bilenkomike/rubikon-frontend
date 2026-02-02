@@ -1,95 +1,3 @@
-// import {
-//   Box,
-//   Typography,
-//   Button,
-//   Stack,
-//   TextField,
-//   Paper,
-// } from "@mui/material";
-// import { useCart } from "../stores/cart.store";
-// import { useNavigate } from "react-router-dom";
-// import api from "../api/axios";
-// import { useState } from "react";
-
-// const CheckoutPage = () => {
-//   const { items, total, clearCart } = useCart();
-//   const navigate = useNavigate();
-//   const [note, setNote] = useState("");
-//   const [loading, setLoading] = useState(false);
-
-//   const handleConfirm = async () => {
-//     setLoading(true);
-//     try {
-//       const res = await api.post(
-//         "orders/checkout/",
-//         { note },
-//         { withAuth: true },
-//       );
-
-//       clearCart();
-
-//       // later → redirect to Telegram
-//       navigate(`/order-success/${res.data.id}`);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   if (!items || items.length === 0) {
-//     return (
-//       <Typography sx={{ mt: 4 }} align="center">
-//         Cart is empty
-//       </Typography>
-//     );
-//   }
-
-//   return (
-//     <Box maxWidth={600} mx="auto" mt={4}>
-//       <Typography variant="h5" fontWeight={700} mb={2}>
-//         Confirm order
-//       </Typography>
-
-//       <Paper sx={{ p: 2, mb: 3 }}>
-//         <Stack spacing={1}>
-//           {items.map((item) => (
-//             <Stack key={item.id} direction="row" justifyContent="space-between">
-//               <Typography>
-//                 {item.product.name} × {item.quantity}
-//               </Typography>
-//               <Typography>₽{item.total}</Typography>
-//             </Stack>
-//           ))}
-
-//           <Stack direction="row" justifyContent="space-between" mt={2}>
-//             <Typography fontWeight={700}>Total</Typography>
-//             <Typography fontWeight={700}>₽{total}</Typography>
-//           </Stack>
-//         </Stack>
-//       </Paper>
-
-//       <TextField
-//         label="Order note (optional)"
-//         multiline
-//         rows={3}
-//         fullWidth
-//         value={note}
-//         onChange={(e) => setNote(e.target.value)}
-//         sx={{ mb: 2 }}
-//       />
-
-//       <Button
-//         variant="contained"
-//         fullWidth
-//         disabled={loading}
-//         onClick={handleConfirm}
-//       >
-//         Confirm order
-//       </Button>
-//     </Box>
-//   );
-// };
-
-// export default CheckoutPage;
 import {
   Box,
   Typography,
@@ -146,7 +54,7 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     if (!success || !orderId) return;
-    navigate(`/profile/my-orders/${orderId}`);
+    navigate(`/${lang}/profile/my-orders/${orderId}`);
   }, [success, orderId, navigate]);
 
   /* ---------- empty cart ---------- */
@@ -180,7 +88,7 @@ const CheckoutPage = () => {
 
             <Button
               variant="contained"
-              onClick={() => navigate(`/profile/my-orders/${orderId}`)}
+              onClick={() => navigate(`/${lang}/profile/my-orders/${orderId}`)}
             >
               {t.checkout.goNow}
             </Button>

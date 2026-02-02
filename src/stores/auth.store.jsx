@@ -25,7 +25,9 @@ export const AuthProvider = ({ children }) => {
       });
 
       localStorage.setItem("access", res.data.access);
+      localStorage.setItem("refresh", res.data.refresh);
       setAccessToken(res.data.access);
+      setRefreshToken(res.data.refresh);
       setIsAuthenticated(true);
 
       return res.data.access;

@@ -101,7 +101,8 @@ const ProfileSidebar = () => {
             primary={t.profile.logout}
             onClick={() => {
               logout();
-              navigate(`/${lang}`);
+              //   navigate(`/${lang}`, );
+              window.location.href = `/${lang}`;
             }}
           />
         </ListItemButton>

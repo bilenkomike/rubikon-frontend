@@ -349,7 +349,9 @@ import { useI18n } from "../translations/i18nProvider";
 import { useEffect, useRef, useState } from "react";
 import api from "../api/axios";
 import ReviewsSection from "../components/ReviewsSection";
-
+import { useAuth } from "../stores/auth.store";
+import { useCart } from "../stores/cart.store";
+import { useUI } from "../stores/ui.store";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -361,6 +363,11 @@ const ProductPage = () => {
   const { lang, t } = useI18n();
   const navigate = useNavigate();
   const swiperRef = useRef(null);
+  const { isAuthenticated } = useAuth();
+  const { addToCart } = useCart();
+  const { setAuthOpen, setOrdersOpen } = useUI();
+  const quantity = 1;
+  const filterValues = []; // later → selected filters
 
   const isMobile = useMediaQuery("(max-width:900px)");
 
@@ -406,6 +413,10 @@ const ProductPage = () => {
   const oldPrice = hasSale
     ? Math.round(price / (1 - product.sale / 100))
     : null;
+
+  const newPrice = product.sale
+    ? product.price - (product.price * product.sale) / 100
+    : product.price;
 
   const formatPrice = (value) =>
     new Intl.NumberFormat(lang === "ru" ? "ru-RU" : "en-US", {
@@ -546,28 +557,63 @@ const ProductPage = () => {
                 {/* PRICE */}
                 <Stack direction="row" spacing={2} alignItems="center">
                   <Typography variant="h4" color="error.main">
-                    {formatPrice(price)}
+                    {/* {formatPrice(price)} */}
+                    {formatPrice(newPrice)}
                   </Typography>
 
-                  {hasSale && (
+                  {product.sale && (
                     <Typography
                       sx={{
                         textDecoration: "line-through",
                         color: "text.secondary",
                       }}
                     >
-                      {formatPrice(oldPrice)}
+                      {product.price}
                     </Typography>
                   )}
                 </Stack>
 
                 <Divider />
+                <Button
+                  variant="contained"
+                  size="large"
+                  fullWidth
+                  onClick={async () => {
+                    if (!isAuthenticated) {
+                      setAuthOpen(true);
+                      return;
+                    }
 
-                <Button variant="contained" size="large" fullWidth>
+                    await addToCart({
+                      product_id: product.id,
+                      quantity,
+                      filter_values: filterValues,
+                    });
+
+                    setOrdersOpen(true); // open cart sidebar
+                  }}
+                >
                   {t.product.add_to_cart}
                 </Button>
 
-                <Button variant="outlined" fullWidth>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={async () => {
+                    if (!isAuthenticated) {
+                      setAuthOpen(true);
+                      return;
+                    }
+
+                    await addToCart({
+                      product_id: product.id,
+                      quantity,
+                      filter_values: filterValues,
+                    });
+
+                    navigate(`/${lang}/checkout`);
+                  }}
+                >
                   {t.product.buy_one_click}
                 </Button>
               </Stack>

@@ -63,6 +63,20 @@ const MyOrdersPage = () => {
 
   /* ---------- list ---------- */
 
+  const calculateTotal = (items) => {
+    let total = 0;
+    items.map((item) => {
+      let _price = parseFloat(item.price);
+      if (item.sale) {
+        let _sale = (parseFloat(item.price) * parseFloat(item.sale)) / 100;
+        _price = parseFloat(item.price) - _sale;
+      }
+
+      total += _price * item.quantity;
+    });
+    return total;
+  };
+
   return (
     <Box>
       <Typography variant="h5" fontWeight={700} mb={3}>
@@ -134,7 +148,7 @@ const MyOrdersPage = () => {
                 alignItems="center"
               >
                 <Typography fontWeight={700}>
-                  {t.orders.total}: ₽{order.total}
+                  {t.orders.total}: ₽{calculateTotal(order.items).toFixed(2)}
                 </Typography>
 
                 <Button
