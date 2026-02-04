@@ -1,5 +1,9 @@
 export const translations = {
   en: {
+    search: {
+      placeholder: "Search products...",
+      noResults: "No results found",
+    },
     home: {
       best_offers: "Best offers for you",
     },
@@ -155,6 +159,10 @@ export const translations = {
   },
 
   ru: {
+    search: {
+      placeholder: "Поиск товаров...",
+      noResults: "Ничего не найдено",
+    },
     home: {
       best_offers: "Лучшие предложения для вас",
     },
