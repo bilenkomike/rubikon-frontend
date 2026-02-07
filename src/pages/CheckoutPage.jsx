@@ -17,7 +17,8 @@ import { useI18n } from "../translations/i18nProvider";
 const REDIRECT_DELAY = 30;
 
 const CheckoutPage = () => {
-  const { items, total, clearCart } = useCart();
+  const { items, total, clearCart, updateQuantity, removeItem } = useCart();
+
   const navigate = useNavigate();
   const { lang } = useParams();
   const { t } = useI18n();
@@ -108,7 +109,68 @@ const CheckoutPage = () => {
 
       <Paper sx={{ p: 2, mb: 3 }}>
         <Stack spacing={1.5}>
-          {items.map((item) => (
+          {items.map((item) => {
+            const product = item.product;
+
+            return (
+              <Stack
+                key={item.id}
+                direction="row"
+                spacing={1.5}
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Avatar
+                  variant="rounded"
+                  src={`${import.meta.env.VITE_MEDIA_BASE_URL}/${product.image}`}
+                  sx={{ width: 48, height: 48 }}
+                />
+
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                  <Typography variant="body2" noWrap>
+                    {lang === "en" ? product.name : product.name_ru}
+                  </Typography>
+
+                  <Stack
+                    direction="row"
+                    spacing={0.5}
+                    alignItems="center"
+                    mt={0.5}
+                  >
+                    <Button
+                      size="small"
+                      disabled={item.quantity <= 1}
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    >
+                      −
+                    </Button>
+
+                    <Typography fontWeight={600}>{item.quantity}</Typography>
+
+                    <Button
+                      size="small"
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    >
+                      +
+                    </Button>
+                  </Stack>
+                </Box>
+
+                <Stack alignItems="flex-end" spacing={0.5}>
+                  <Typography fontWeight={600}>₽{item.total}</Typography>
+
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => removeItem(item.id)}
+                  >
+                    Remove
+                  </Button>
+                </Stack>
+              </Stack>
+            );
+          })}
+          {/* {items.map((item) => (
             <Stack
               key={item.id}
               direction="row"
@@ -116,14 +178,14 @@ const CheckoutPage = () => {
               alignItems="center"
               justifyContent="space-between"
             >
-              {/* IMAGE */}
+              
               <Avatar
                 variant="rounded"
                 src={`${import.meta.env.VITE_MEDIA_BASE_URL}/${item.product.image}`}
                 sx={{ width: 48, height: 48 }}
               />
 
-              {/* NAME + QTY */}
+              
               <Box sx={{ flex: 1, minWidth: 0 }}>
                 <Typography variant="body2" noWrap>
                   {lang === "en" ? item.product.name : item.product.name_ru}
@@ -133,10 +195,10 @@ const CheckoutPage = () => {
                 </Typography>
               </Box>
 
-              {/* PRICE */}
+              
               <Typography fontWeight={600}>₽{item.total}</Typography>
             </Stack>
-          ))}
+          ))} */}
 
           <Stack direction="row" justifyContent="space-between" mt={2}>
             <Typography fontWeight={700}>{t.checkout.total}</Typography>

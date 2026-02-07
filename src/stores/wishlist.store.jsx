@@ -20,24 +20,50 @@ export const WishlistProvider = ({ children }) => {
   }, [isAuthenticated]);
 
   const toggleWishlist = async (productId) => {
-    if (wishlistIds.has(productId)) {
-      await api.delete(`users/wishlist/remove/${productId}/`, {
-        withAuth: true,
-      });
-      setWishlistIds((prev) => {
-        const next = new Set(prev);
-        next.delete(productId);
-        return next;
-      });
-    } else {
-      await api.post(
-        "users/wishlist/add/",
-        { product_id: productId },
-        { withAuth: true },
-      );
-      setWishlistIds((prev) => new Set(prev).add(productId));
+    const exists = wishlistIds.has(productId);
+
+    setWishlistIds((prev) => {
+      const next = new Set(prev);
+      exists ? next.delete(productId) : next.add(productId);
+      return next;
+    });
+
+    try {
+      if (exists) {
+        await api.delete(`users/wishlist/remove/${productId}/`, {
+          withAuth: true,
+        });
+      } else {
+        await api.post(
+          "users/wishlist/add/",
+          { product_id: productId },
+          { withAuth: true },
+        );
+      }
+    } catch (e) {
+      console.error("Wishlist update failed", e);
     }
   };
+
+  // const toggleWishlist = async (productId) => {
+  //   if (wishlistIds.has(productId)) {
+  //     await api.delete(`users/wishlist/remove/${productId}/`, {
+  //       withAuth: true,
+  //     });
+  //     setWishlistIds((prev) => {
+  //       const next = new Set(prev);
+  //       next.delete(productId);
+  //       return next;
+  //     });
+  //   } else {
+  //     await api.post(
+  //       "users/wishlist/add/",
+  //       { product_id: productId },
+  //       { withAuth: true },
+  //     );
+  //     setWishlistIds((prev) => new Set(prev).add(productId));
+  //   }
+  // };
 
   return (
     <WishlistContext.Provider value={{ wishlistIds, toggleWishlist }}>
