@@ -222,10 +222,10 @@ const ProductCard = ({ product }) => {
 
   const { isAuthenticated } = useAuth();
   const { setAuthOpen, setOrdersOpen } = useUI();
-  const { wishlistIds, toggleWishlist } = useWishlist();
+  const { toggleWishlist, has } = useWishlist();
   const { addToCart } = useCart();
 
-  const inWishlist = wishlistIds.has(product.id);
+  const inWishlist = has(product.id);
 
   const handleNavigate = () => {
     navigate(`/${lang}/product/${product.slug}/`);

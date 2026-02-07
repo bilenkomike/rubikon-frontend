@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+} from "react";
 import api from "../api/axios";
 import { useAuth } from "./auth.store";
 
@@ -6,26 +13,38 @@ const WishlistContext = createContext(null);
 
 export const WishlistProvider = ({ children }) => {
   const { isAuthenticated } = useAuth();
-  const [wishlistIds, setWishlistIds] = useState(new Set());
+  const [wishlistIds, setWishlistIds] = useState([]); // Array
+  const inFlight = useRef(new Set());
+
+  const fetchWishlist = async () => {
+    const res = await api.get("users/wishlist/", { withAuth: true });
+    const ids = res.data.map((item) => item.product.id);
+    setWishlistIds([...new Set(ids)]); // dedupe
+  };
 
   useEffect(() => {
     if (!isAuthenticated) {
-      setWishlistIds(new Set());
+      setWishlistIds([]);
       return;
     }
-
-    api.get("users/wishlist/", { withAuth: true }).then((res) => {
-      setWishlistIds(new Set(res.data.map((item) => item.product.id)));
-    });
+    fetchWishlist();
   }, [isAuthenticated]);
 
-  const toggleWishlist = async (productId) => {
-    const exists = wishlistIds.has(productId);
+  // 🔹 O(1) lookup without changing public API
+  const wishlistSet = useMemo(() => new Set(wishlistIds), [wishlistIds]);
+  const has = (productId) => wishlistSet.has(productId);
 
-    setWishlistIds((prev) => {
-      const next = new Set(prev);
-      exists ? next.delete(productId) : next.add(productId);
-      return next;
+  const toggleWishlist = async (productId) => {
+    if (inFlight.current.has(productId)) return;
+    inFlight.current.add(productId);
+
+    const exists = has(productId);
+    const prev = [...wishlistIds];
+
+    // optimistic update
+    setWishlistIds((curr) => {
+      if (exists) return curr.filter((id) => id !== productId);
+      return curr.includes(productId) ? curr : [...curr, productId];
     });
 
     try {
@@ -42,31 +61,21 @@ export const WishlistProvider = ({ children }) => {
       }
     } catch (e) {
       console.error("Wishlist update failed", e);
+      setWishlistIds(prev); // rollback
+    } finally {
+      inFlight.current.delete(productId);
     }
   };
 
-  // const toggleWishlist = async (productId) => {
-  //   if (wishlistIds.has(productId)) {
-  //     await api.delete(`users/wishlist/remove/${productId}/`, {
-  //       withAuth: true,
-  //     });
-  //     setWishlistIds((prev) => {
-  //       const next = new Set(prev);
-  //       next.delete(productId);
-  //       return next;
-  //     });
-  //   } else {
-  //     await api.post(
-  //       "users/wishlist/add/",
-  //       { product_id: productId },
-  //       { withAuth: true },
-  //     );
-  //     setWishlistIds((prev) => new Set(prev).add(productId));
-  //   }
-  // };
-
   return (
-    <WishlistContext.Provider value={{ wishlistIds, toggleWishlist }}>
+    <WishlistContext.Provider
+      value={{
+        wishlistIds,
+        has, // ✅ stable API
+        toggleWishlist,
+        fetchWishlist,
+      }}
+    >
       {children}
     </WishlistContext.Provider>
   );
