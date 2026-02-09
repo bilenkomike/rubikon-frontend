@@ -25,6 +25,7 @@ export const translations = {
       buy_one_click: "Buy in 1 click",
       description: "Description",
       characteristics: "Characteristics",
+      left: "Left in stock:",
     },
     categories: {
       categories: "Categories",
@@ -184,6 +185,7 @@ export const translations = {
       buy_one_click: "Купить в 1 клик",
       description: "Описание",
       characteristics: "Характеристики",
+      left: "Остаток на складе:",
     },
 
     categories: {

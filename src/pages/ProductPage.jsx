@@ -543,6 +543,12 @@ const ProductPage = () => {
               <Stack direction="row" spacing={2} alignItems="center">
                 # {product.vendor_code_public}
               </Stack>
+              <Divider />
+              <Typography variant="body2" color="text.secondary">
+                {t.product.left} {product.quantity}
+              </Typography>
+              <Divider />
+
               <Stack spacing={2}>
                 {/* RATING */}
                 <Stack direction="row" spacing={1} alignItems="center">

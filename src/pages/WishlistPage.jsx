@@ -27,7 +27,6 @@ const WishlistPage = () => {
     loadWishlist();
   }, []);
 
-  // 🔥 keep page in sync with context removals
   useEffect(() => {
     setItems((curr) =>
       curr.filter((item) => wishlistIds.includes(item.product.id)),
