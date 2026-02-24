@@ -1,0 +1,76 @@
+.loader-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: white;
+  overflow: hidden;
+  color: black;
+}
+
+.loader-canvasWrap {
+  position: absolute;
+  inset: 0;
+}
+
+.loader-heroUI {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 6vw;
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+  color: black;
+}
+
+.loader-logoWrap > svg {
+  width: 90vw;
+  height: 250px;
+  margin-bottom: 12px;
+}
+
+.loader-title {
+  text-align: center;
+  font-size: 56px;
+  line-height: 1.05;
+  margin: 0 0 12px 0;
+}
+
+@media (max-width: 768px) {
+  .loader-title {
+    font-size: 48px;
+    line-height: 1.05;
+  }
+}
+
+.loader-subtitle {
+  margin: 0;
+  font-size: 18px;
+  opacity: 0.7;
+  text-align: center;
+}
+
+.loader-caret {
+  width: 10px;
+  height: 1.05em;
+  background: #111;
+  display: inline-block;
+  transform: translateY(2px);
+  animation: blink 0.9s infinite;
+}
+
+.loader-caret.loader-caret--done {
+  animation: none; /* stop blinking */
+  opacity: 0; /* hide caret */
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}

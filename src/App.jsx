@@ -18,6 +18,8 @@ import ChangePasswordPage from "./pages/ChangePasswordPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import MyOrdersPage from "./pages/MyOrdersPage";
 import OrderDetailPage from "./pages/OrderDetailPage";
+import { useState } from "react";
+import Loader from "./components/Loader/Loader";
 
 const RequireAuth = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -31,64 +33,73 @@ const RequireAuth = ({ children }) => {
 };
 
 function App() {
+  const [loading, setLoading] = useState(true);
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "#f5f5f5", marginBottom: "64px" }}>
-      <Header />
-      <Routes>
-        {/* redirect root */}
-        <Route path="/" element={<Navigate to="/ru" replace />} />
+    <>
+      {loading ? (
+        <Loader onDone={() => setLoading(false)} />
+      ) : (
+        <Box
+          sx={{ minHeight: "100vh", bgcolor: "#f5f5f5", marginBottom: "64px" }}
+        >
+          <Header />
+          <Routes>
+            {/* redirect root */}
+            <Route path="/" element={<Navigate to="/ru" replace />} />
 
-        <Route
-          path="/:lang/*"
-          element={
-            <Routes>
-              <Route index element={<HomePage />} />
-              <Route
-                path="categories/:category/"
-                element={<CategoriesPage />}
-              />
-              <Route
-                path="categories/:category/:subcategory/"
-                element={<ProductsPage />}
-              />
-              <Route path="product/:product/" element={<ProductPage />} />
-              <Route path="contact" element={<ContactPage />} />
-              <Route
-                path="/checkout"
-                element={
-                  <RequireAuth>
-                    <CheckoutPage />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <RequireAuth>
-                    <ProfileLayout />
-                  </RequireAuth>
-                }
-              >
-                <Route index element={<ProfilePage />} />
-                <Route path="wishlist" element={<WishlistPage />} />
-                <Route path="password" element={<ChangePasswordPage />} />
-                <Route path="my-orders" element={<MyOrdersPage />} />
-                <Route
-                  path="my-orders/:orderId"
-                  element={<OrderDetailPage />}
-                />
-              </Route>
-            </Routes>
-          }
-        />
+            <Route
+              path="/:lang/*"
+              element={
+                <Routes>
+                  <Route index element={<HomePage />} />
+                  <Route
+                    path="categories/:category/"
+                    element={<CategoriesPage />}
+                  />
+                  <Route
+                    path="categories/:category/:subcategory/"
+                    element={<ProductsPage />}
+                  />
+                  <Route path="product/:product/" element={<ProductPage />} />
+                  <Route path="contact" element={<ContactPage />} />
+                  <Route
+                    path="/checkout"
+                    element={
+                      <RequireAuth>
+                        <CheckoutPage />
+                      </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      <RequireAuth>
+                        <ProfileLayout />
+                      </RequireAuth>
+                    }
+                  >
+                    <Route index element={<ProfilePage />} />
+                    <Route path="wishlist" element={<WishlistPage />} />
+                    <Route path="password" element={<ChangePasswordPage />} />
+                    <Route path="my-orders" element={<MyOrdersPage />} />
+                    <Route
+                      path="my-orders/:orderId"
+                      element={<OrderDetailPage />}
+                    />
+                  </Route>
+                </Routes>
+              }
+            />
 
-        <Route path="*" element={<Navigate to="/en" replace />} />
-      </Routes>
-      <AuthModal />
-      <CatalogSidebar />
-      <UsersSideBar />
-      <OrdersSidebar />
-    </Box>
+            <Route path="*" element={<Navigate to="/en" replace />} />
+          </Routes>
+          <AuthModal />
+          <CatalogSidebar />
+          <UsersSideBar />
+          <OrdersSidebar />
+        </Box>
+      )}
+    </>
   );
 }
 
